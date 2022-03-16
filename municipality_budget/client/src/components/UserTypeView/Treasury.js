@@ -1,10 +1,17 @@
 import React from 'react'
+import Login from '../Auth/login';
+import Register from '../Auth/register';
+import Navbar from '../UIComponents/navUI';
 
-export default function Treasury() {
+export default function Treasury(props) {
+  const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin}/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
+
   return (
     <>
-      <div className='d-flex align-items-center justify-content-center'><h1 className='text-primary text-uppercase fw-bold'>Treasury</h1></div>
-      
+      <Navbar />
+      <div className='d-flex align-items-center justify-content-center mt-3'><h1 className='text-primary text-uppercase fw-bold'>Treasury</h1></div>
+      {isLogin}
+
     </>
   )
 }

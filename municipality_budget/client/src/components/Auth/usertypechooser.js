@@ -72,11 +72,9 @@ export default function UserTypeChooser() {
         <br/>
         <MDBRow>
           <div className='d-flex flex-row-reverse'>
-            <MDBBtn rounded>
-              <Link to={{ pathname: '/community', state: {useType: 'community'}}} key={1}>
-                Community
-              </Link>
-            </MDBBtn>
+          <MDBBtn tag='a' href='/community' rounded>
+            Community
+          </MDBBtn>
           </div>
         </MDBRow>
       </MDBContainer>

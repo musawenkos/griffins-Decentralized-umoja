@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     BrowserRouter,
     Routes,
@@ -13,18 +13,18 @@ import ServiceProvider from './UserTypeView/ServiceProvider';
 import Community from './UserTypeView/Community';
 
 export default function GetStarted() {
+  const [isLogin, handleIsLogin] = useState(true);
+
   return (
     <BrowserRouter>
         <Routes>
             <Route path="/" >
               	<Route index element={<UserTypeChooser />} />
-                <Route path="treasury" element={<Treasury />} />
-                <Route path="local-municipality" element={<Municipality />} />
-                <Route path="service-provider" element={<ServiceProvider />} />
+                <Route path="treasury" element={<Treasury handleIsLogin={handleIsLogin} isLogin={isLogin}/>} />
+                <Route path="local-municipality" element={<Municipality handleIsLogin={handleIsLogin} isLogin={isLogin}/>} />
+                <Route path="service-provider" element={<ServiceProvider handleIsLogin={handleIsLogin} isLogin={isLogin}/>} />
                 <Route path="community" element={<Community />} />
             </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
         </Routes>
     </BrowserRouter>
   )
