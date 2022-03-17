@@ -18,7 +18,7 @@ export default function Login(props) {
           </MDBCol>
         </MDBRow>
         <MDBRow className='mt-3'>
-            <div className='d-flex flex-row-reverse'>
+            <div className='d-flex flex-row-reverse' onClick={() => props.removeLogin(false)}>
               <MDBBtn rounded>Login</MDBBtn>
             </div>
             <div className='d-flex flex-row-reverse text-primary' style={{cursor:"pointer"}} onClick={() => props.makeLoginFalse(false)}>
