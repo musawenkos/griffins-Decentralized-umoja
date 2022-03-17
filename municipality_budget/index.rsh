@@ -1,53 +1,46 @@
 'reach 0.1';
 
-export const main = Reach.App(() => {
-    
-    const TransferFunds = {
-        allocateFunds: Fun([UInt], Null),
-    }
-    const RecieveFunds = {
-        getFunds: Fun([],UInt),
-    }
+const Budget = {
+    balance: UInt,
+};
+const TransferFunds ={
+    allocateFunds: Fun([UInt], Null),
+}
+const RecieveFunds ={
+    getFunds: Fun([],UInt),
+}
 
-    //Participants {NatGov, Muni, and Supp}
-    const NatGov = Participant('National Government', {
-        budget: UInt,
+export const main = Reach.App(() => {
+    //definition of contract participants
+    const NatGov= Participant ('National_Government', {
+        ...Budget,
         ...TransferFunds,
     }); 
-    const Muni = Participant('Local Municipality', {
-        ...RecieveFunds,
+    const LocalMuni= Participant('Local_Municipality',{
+        ...Budget,
         ...TransferFunds,
-        expenditure: UInt,
+        ...RecieveFunds,
     });
-    const Supp = Participant('Supplier', {
+    const Supplier= Participant ('Service_Provider',{
         ...RecieveFunds,
     });
     init();
 
-    //making initial budget funds public
+    //actions of each participant
     NatGov.only(() => {
-        const budget = declassify(interact.allocateFunds(expenditure));
+        const funds= declassify(interact.balance);
+        const transferfunds= declassify(interact.allocateFunds(funds));
     });
-    NatGov.publish(budget)
-        .pay(budget);
+    NatGov.publish(funds,transferfunds)
+        .pay(funds);
     commit();
 
-    //Municipality recieves funds from the government
-    Muni.only(() => {
-        interact.getFunds();
+    LocalMuni.only(() => {
+        //declassify(interact.getFunds());
+        const Munifunds= declassify(interact.balance);
+        const PaySupplier= declassify(interact.allocateFunds(Munifunds));
     });
-    commit();
-
-    //Municipality spending funds
-    Muni.only(() => {
-        const expenditure = declassify(interact.allocateFunds(expenditure));
-    });
-    Muni.publish(expenditure).pay(expenditure);
-    commit();
-
-    //Supplier recieving funds
-    Supp.only(() => {
-        interact.getFunds();
-    });
+    LocalMuni.publish(Munifunds,PaySupplier)
+        .pay(Munifunds);   
     commit();
 });
