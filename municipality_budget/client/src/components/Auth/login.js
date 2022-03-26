@@ -2,6 +2,11 @@ import React from 'react'
 import { MDBContainer, MDBRow, MDBInput,MDBBtn, MDBCol  } from 'mdb-react-ui-kit'
 
 export default function Login(props) {
+  //props.makeLoginFalse(false)
+  const handleLogin = () =>{
+    props.handleConnectWallet();
+    //props.removeLogin(false)
+  }
   return (
     <>
       <MDBContainer>
@@ -18,7 +23,7 @@ export default function Login(props) {
           </MDBCol>
         </MDBRow>
         <MDBRow className='mt-3'>
-            <div className='d-flex flex-row-reverse' onClick={() => props.removeLogin(false)}>
+            <div className='d-flex flex-row-reverse' onClick={handleLogin}>
               <MDBBtn rounded>Login</MDBBtn>
             </div>
             <div className='d-flex flex-row-reverse text-primary' style={{cursor:"pointer"}} onClick={() => props.makeLoginFalse(false)}>

@@ -10,9 +10,11 @@ import Municipality from './UserTypeView/Municipality';
 import ServiceProvider from './UserTypeView/ServiceProvider';
 import Community from './UserTypeView/Community';
 
-export default function GetStarted() {
+export default function GetStarted(props) {
   const [isLogin, handleIsLogin] = useState(true);
   const [showView, handleShowView] = useState(true);
+
+  
 
   return (
     <BrowserRouter>
