@@ -1,17 +1,37 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Login from '../Auth/login';
 import Register from '../Auth/register';
 import Navbar from '../UIComponents/navUI';
 import TreasuryView from './UserView/treasuryView';
+import {loadStdlib, MyAlgoConnect} from '@reach-sh/stdlib';
+
+const reach = loadStdlib("ALGO");
+
+
+reach.setWalletFallback(reach.walletFallback({
+  providerEnv: 'TestNet', MyAlgoConnect }));
 
 export default function Treasury(props) {
-  const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin} removeLogin ={props.handleShowView}/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
-  const treasuryView = <TreasuryView />;
+  const [acc, setAccount] = useState(undefined);
+  const [balance,setBalance] = useState(0);
+  
+  const fmt = (x) => reach.formatCurrency(x, 4);
+  const getBalance = async (who) => fmt(await reach.balanceOf(who));
+
+  const connectWallet = async () => {
+    const account = await reach.getDefaultAccount();
+    setAccount(account);
+    let balance = await getBalance(account);
+    setBalance(balance);
+    props.handleShowView(false);
+  };
+  const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin} handleConnectWallet={connectWallet}/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
+  const treasuryView = <TreasuryView account={acc}/>;
   return (
     <>
-      <Navbar />
+      <Navbar account={acc} bal={balance} />
       <div className='d-flex align-items-center justify-content-center mt-3'><h1 className='text-primary text-uppercase fw-bold'>Treasury</h1></div>
-      {props.showView ? treasuryView : isLogin}
+      {!props.showView ? treasuryView : isLogin}
     </>
   )
 }

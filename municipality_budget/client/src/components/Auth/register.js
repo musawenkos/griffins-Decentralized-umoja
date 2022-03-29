@@ -16,8 +16,12 @@ export default function Register(props) {
       };
       fetch(url, requestOptions)
       .then(response => response.json())
-      .then(data => console.log(data));
-      //console.log(formValue);
+      .then((results) => {
+        if(results["rowsAffected"][0] === 1){
+          props.makeLoginFalse(true);
+        }
+      });
+      
   }
   const [formValue, setFormValue] = useState({
     userType : props.type,

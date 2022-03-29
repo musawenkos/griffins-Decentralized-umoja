@@ -9,10 +9,10 @@ app.use(cors());
 app.use(express.json());
 const crypto = require('crypto');
 var config = {
-    user: '',
-    password: '',
-    server: '', 
-    database: '',
+    user: 'MBC',
+    password: '123456',
+    server: 'DESKTOP-5DSBE27', 
+    database: 'Muni',
     trustServerCertificate: true,
 };
 
@@ -39,7 +39,38 @@ app.post("/register",async (req,res)=>{
             
         });
     });
+
+    
 })
+
+app.post("/login",async (req,res)=>{
+    const {userType, email} = req.body;
+    // connect to your database
+    sql.connect(config, function (err) {
+    
+        if (err) console.log(err);
+
+        // create Request object
+        var request = new sql.Request();
+           
+        // query to the database and get the records
+        var sqlStr = "SELECT * FROM Users WHERE user_email ='" + email + "'";
+        request.query(sqlStr, function (err, recordset) {
+
+            if (err) console.log(err)
+            let record = recordset.recordset
+            if(record.length != 0){
+                // send records as a response
+                res.send({"exist":"true"});
+            }else{
+                res.send({"exist":"false"});
+            }
+            
+        });
+    });
+
+});
+
 
 
 app.listen(PORT, () => {

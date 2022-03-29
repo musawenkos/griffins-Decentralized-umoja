@@ -1,12 +1,39 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { MDBContainer, MDBRow, MDBInput,MDBBtn, MDBCol  } from 'mdb-react-ui-kit'
 
 export default function Login(props) {
   //props.makeLoginFalse(false)
   const handleLogin = () =>{
     props.handleConnectWallet();
-    //props.removeLogin(false)
+    /* const url = "http://localhost:5000/login";
+      const requestOptions = {
+          method: 'POST',
+          headers: { 
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formValue)
+      };
+      fetch(url, requestOptions)
+      .then(response => response.json())
+      .then((results) => {
+        if(results["exist"] === "true"){
+          
+          props.removeLogin(false)
+        }
+        
+      }); */
+      
+    //
   }
+  const [formValue, setFormValue] = useState({
+    userType : props.type,
+    email: ''
+  });
+
+  const onChange = (e) => {
+    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+  };
+
   return (
     <>
       <MDBContainer>
@@ -19,7 +46,7 @@ export default function Login(props) {
             <MDBInput label={props.type} id='form1' type='text' disabled/>
           </MDBCol>
           <MDBCol>
-            <MDBInput label='Email address:' id='form1' type='text' />
+            <MDBInput name='email' label='Email address:' id='form1' type='text' value={formValue.email} onChange={onChange} />
           </MDBCol>
         </MDBRow>
         <MDBRow className='mt-3'>

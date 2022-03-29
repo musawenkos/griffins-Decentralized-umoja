@@ -1,16 +1,22 @@
-import React from 'react'
-import { MDBCol, MDBContainer, MDBRow, MDBInput, MDBBtn } from 'mdb-react-ui-kit'
+import React, {useState} from 'react'
+import { MDBCol, MDBContainer, MDBRow, MDBBtn } from 'mdb-react-ui-kit'
+//import * as backend from "../../../build/index.main.mjs";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 
 export default function TreasuryView(props) {
-    const [age, setAge] = React.useState('');
+    const [ctcInfoStr,setCTCInfor] = useState('');
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+    const onChange = (e) => {
+        setCTCInfor(e.target.value);
+      };
+    
+    const onAttached = async () => {
+        console.log(ctcInfoStr);
+    };
   return (
     <div>
         <MDBContainer>
@@ -18,8 +24,20 @@ export default function TreasuryView(props) {
                 <MDBCol className='shadow-5'>
                     
                     <MDBRow className='mt-5'>
-                        <MDBRow>
-                            <MDBInput label='Amount(ALGO):' id='formControlDefault' type='text' />
+                        <MDBRow className='mt-4'>
+                            <MDBCol>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Multiline"
+                                multiline
+                                rows={4}
+                                value={ctcInfoStr}
+                                onChange={onChange}
+                                />
+                            </MDBCol>
+                            <MDBCol>
+                                <MDBBtn rounded onClick={onAttached}>Attach to Contract</MDBBtn>
+                            </MDBCol>
                         </MDBRow>
                         <MDBRow className='mt-2'>
                             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -27,8 +45,6 @@ export default function TreasuryView(props) {
                                 <Select
                                 labelId="demo-simple-select-standard-label"
                                 id="demo-simple-select-standard"
-                                value={age}
-                                onChange={handleChange}
                                 label="Select Local Municipality"
                                 >
                                 <MenuItem value="">

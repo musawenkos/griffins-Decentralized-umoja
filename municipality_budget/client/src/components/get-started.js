@@ -13,7 +13,7 @@ import Community from './UserTypeView/Community';
 export default function GetStarted(props) {
   const [isLogin, handleIsLogin] = useState(true);
   const [showView, handleShowView] = useState(true);
-
+  const [ctcInfoStr,setCTCInfor] = useState('');
   
 
   return (
@@ -21,11 +21,31 @@ export default function GetStarted(props) {
         <Routes>
             <Route path="/" >
               	<Route index element={<UserTypeChooser />} />
-                <Route path="treasury" element={<Treasury handleIsLogin={handleIsLogin} isLogin={isLogin} handleShowView={handleShowView} showView={showView}/>} />
-                <Route path="local-municipality" element={<Municipality handleIsLogin={handleIsLogin} isLogin={isLogin} handleShowView={handleShowView} showView={showView}/>} />
+                <Route 
+                  path="treasury" 
+                  element={
+                    <Treasury 
+                      handleIsLogin={handleIsLogin} 
+                      isLogin={isLogin} 
+                      handleShowView={handleShowView} 
+                      showView={showView}
+                      ctcInfoStrGetter={ctcInfoStr}
+                    />} 
+                />
+                <Route 
+                  path="local-municipality" 
+                  element={
+                    <Municipality 
+                      handleIsLogin={handleIsLogin} 
+                      isLogin={isLogin} 
+                      handleShowView={handleShowView} 
+                      showView={showView}
+                      ctcInfoStrSetter={setCTCInfor}
+                    />} 
+                />
                 <Route path="service-provider" element={<ServiceProvider handleIsLogin={handleIsLogin} isLogin={isLogin} handleShowView={handleShowView} showView={showView} />} />
                 <Route path="community" element={<Community />} />
-            </Route>
+             </Route>
         </Routes>
     </BrowserRouter>
   )
