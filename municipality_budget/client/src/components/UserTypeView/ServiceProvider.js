@@ -3,6 +3,7 @@ import Login from '../Auth/login';
 import Register from '../Auth/register';
 import Navbar from '../UIComponents/navUI';
 import {loadStdlib, MyAlgoConnect} from '@reach-sh/stdlib';
+import ServiceProviderView from './UserView/serviceproviderView';
 
 const reach = loadStdlib("ALGO");
 
@@ -21,6 +22,7 @@ export default function ServiceProvider(props) {
     setAccount(account.getAddress());
     let balance = await getBalance(account);
     setBalance(balance);
+    props.handleShowView(false);
   };
 
   const isLogin = props.isLogin ? <Login type ="Service Provider" handleConnectWallet={connectWallet} makeLoginFalse={props.handleIsLogin}/> : <Register type ="Service Provider" makeLoginFalse={props.handleIsLogin}/>;
@@ -28,7 +30,7 @@ export default function ServiceProvider(props) {
     <>
       <Navbar account={acc} bal={balance} />
       <div className='d-flex align-items-center justify-content-center mt-3'><h1 className='text-primary text-uppercase fw-bold'>Service Provider</h1></div>
-      {isLogin}
+      {!props.showView ? <ServiceProviderView  account={acc} />: isLogin}
     </>
   )
 }
