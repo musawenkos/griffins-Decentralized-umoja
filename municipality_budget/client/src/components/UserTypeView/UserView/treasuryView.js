@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { MDBCol, MDBContainer, MDBRow, MDBBtn } from 'mdb-react-ui-kit'
-//import * as backend from "../../../build/index.main.mjs";
+import * as backend from "../../../build/index.main.mjs";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -12,10 +12,17 @@ export default function TreasuryView(props) {
 
     const onChange = (e) => {
         setCTCInfor(e.target.value);
-      };
+    };
+
+    const isRequestedAmt = (amt) => {
+        console.log(amt);
+    };
     
     const onAttached = async () => {
         console.log(ctcInfoStr);
+        const ctc = props.account.contract(backend, JSON.parse(ctcInfoStr));
+        backend.National_Government(ctc, { isRequestedAmt});
+        alert('You have accepted the user amount');
     };
   return (
     <div>

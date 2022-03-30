@@ -5,6 +5,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import {loadStdlib} from '@reach-sh/stdlib';
+
+const reach = loadStdlib("ALGO");
 
 export default function MunicipalityView(props) {
     const [ctcInfoStr,setCTCInfor] = useState('');
@@ -20,7 +23,7 @@ export default function MunicipalityView(props) {
       };
 
     const onDeploy = async () => {
-        let requestedAmt = formValue.requestedAmt;
+        let requestedAmt =  reach.parseCurrency(formValue.requestedAmt);
         let requestDescr = formValue.requestedDecr;
         const meAddress = props.account.networkAccount;
         const ctc = props.account.contract(backend);
