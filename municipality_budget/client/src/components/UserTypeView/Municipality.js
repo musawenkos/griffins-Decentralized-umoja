@@ -25,7 +25,7 @@ export default function Municipality(props) {
     props.handleShowView(false);
   };
   const isLogin = props.isLogin ? <Login type ="Municipality" makeLoginFalse={props.handleIsLogin}  handleConnectWallet={connectWallet}  /> : <Register type ="Municipality" makeLoginFalse={props.handleIsLogin}/>;
-  const municipalityView = <MunicipalityView account={acc}/>;
+  const municipalityView = <MunicipalityView account={acc} setNewBal={setBalance} getBalance={getBalance} />;
   return ( 
     <>
       <Navbar account={acc} bal={balance} />

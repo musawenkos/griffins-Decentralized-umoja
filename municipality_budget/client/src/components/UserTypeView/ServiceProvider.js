@@ -19,7 +19,7 @@ export default function ServiceProvider(props) {
 
   const connectWallet = async () => {
     const account = await reach.getDefaultAccount();
-    setAccount(account.getAddress());
+    setAccount(account);
     let balance = await getBalance(account);
     setBalance(balance);
     props.handleShowView(false);

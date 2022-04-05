@@ -5,13 +5,19 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 import {loadStdlib} from '@reach-sh/stdlib';
+import Notification from '../../Notification/notification.js';
+import {serverTimestamp} from "firebase/firestore"
+import RequestDataService from "../../../services/request_service"
 
 const reach = loadStdlib("ALGO");
 
 export default function MunicipalityView(props) {
     const [ctcInfoStr,setCTCInfor] = useState('');
+    const [ctcInfoStrVal,setCTCInforVal] = useState('');
     const [isAttached,setAttachCode] = useState(false);
+    const [isDeployer, isDeployerHandler] = useState(true);
     const [formValue, setFormValue] = useState({
         age : 0,
         requestedAmt: 0,
@@ -21,7 +27,9 @@ export default function MunicipalityView(props) {
       const onChange = (e) => {
         setFormValue({ ...formValue, [e.target.name]: e.target.value });
       };
-
+    const onChangeAttach = (e) => {
+        setCTCInforVal(e.target.value);
+    };
     const onDeploy = async () => {
         let requestedAmt =  reach.parseCurrency(formValue.requestedAmt);
         let requestDescr = formValue.requestedDecr;
@@ -31,6 +39,36 @@ export default function MunicipalityView(props) {
         const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
         setCTCInfor(ctcInfoStr);
         setAttachCode(true);
+        
+        
+
+        const newRequestInfor = {
+            inforTimestamp: serverTimestamp(),
+            requestInforStatus: "NOT USED",
+            request_Description: requestDescr,
+            request_amount: formValue.requestedAmt,
+            requesterInfor:ctcInfoStr,
+            requesterUser: "ndlelamusa1st@gmail.com",
+        };
+
+        try {
+            await RequestDataService.addRequest(newRequestInfor);
+
+        } catch (error) {
+            console.error(error.message)
+        }
+        
+    };
+
+    const isRequestedAmt = (amt) => {
+        console.log(amt);
+    };
+
+    const onAttached = async () => {
+        console.log(ctcInfoStrVal);
+        const ctc = props.account.contract(backend, JSON.parse(ctcInfoStrVal));
+        backend.National_Government(ctc, { isRequestedAmt});
+        alert('You have accepted the user amount');
     };
 
     const copyToClipborad = async () => {
@@ -66,13 +104,38 @@ export default function MunicipalityView(props) {
             </MDBCol>
             
     </MDBRow>;
+
+    const attachView = 
+    <MDBRow className='mt-4'>
+        <MDBCol>
+        <TextField
+            id="outlined-multiline-static"
+            label="Multiline"
+            multiline
+            rows={4}
+            value={ctcInfoStrVal}
+            onChange={onChangeAttach}
+            />
+        </MDBCol>
+        <MDBCol>
+            <MDBBtn rounded onClick={onAttached}>Attach to Contract</MDBBtn>
+        </MDBCol>
+    </MDBRow>;
     
   return (
     <div>
         <MDBContainer>
             <MDBRow >
                 <MDBCol className='shadow-5'>
-                    {isAttached ? attachCode : deployView}
+                    <MDBRow>
+                        <MDBCol>
+                            <MDBBtn rounded onClick={() => isDeployerHandler(false)}>Attach to a request</MDBBtn>
+                        </MDBCol>
+                        <MDBCol>
+                            <MDBBtn rounded onClick={() => isDeployerHandler(true)}>Deploy request</MDBBtn>
+                        </MDBCol>
+                    </MDBRow>
+                    {isDeployer ?  isAttached ? attachCode : deployView : attachView}
                     <MDBRow className='mt-4'>
                         <MDBRow>
                             <MDBInput label='Amount(ALGO):' id='formControlDefault' type='text' />
@@ -101,10 +164,7 @@ export default function MunicipalityView(props) {
                         </div>
                     </MDBRow>
                 </MDBCol>
-                <MDBCol className='shadow-5'>
-                    <div className='d-flex align-items-center justify-content-center mt-3'><h3 className='text-primary text-uppercase fw-bold'>Payment to Suppliers</h3></div>
-                    <div style={{height:"60vh"}}></div>
-                </MDBCol>
+                <Notification isAttachContract ={isDeployer} account={props.account}/>
             </MDBRow>
         </MDBContainer>
     </div>

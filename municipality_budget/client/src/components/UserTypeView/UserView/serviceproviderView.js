@@ -1,7 +1,14 @@
 import React,{useState} from 'react'
+import * as backend from "../../../build/index.main.mjs";
 import { MDBCol, MDBContainer, MDBRow, MDBInput, MDBBtn } from 'mdb-react-ui-kit'
+import {loadStdlib} from '@reach-sh/stdlib';
 
-export default function ServiceProviderView() {
+
+const reach = loadStdlib("ALGO");
+
+export default function ServiceProviderView(props) {
+    const [ctcInfoStr,setCTCInfor] = useState('');
+    const [isAttached,setAttachCode] = useState(false);
     const [formValue, setFormValue] = useState({
         requestedAmt: 0,
         requestedDecr: '',
@@ -10,6 +17,22 @@ export default function ServiceProviderView() {
       const onChange = (e) => {
         setFormValue({ ...formValue, [e.target.name]: e.target.value });
       };
+
+      const onDeploy = async () => {
+        let requestedAmt =  reach.parseCurrency(formValue.requestedAmt);
+        let requestDescr = formValue.requestedDecr;
+        const meAddress = props.account.networkAccount;
+        const ctc = props.account.contract(backend);
+        backend.Local_Municipality(ctc,{requestedAmt, requestDescr, meAddress});
+        const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
+        setCTCInfor(ctcInfoStr);
+        setAttachCode(true);
+    };
+
+    const copyToClipborad = async () => {
+        navigator.clipboard.writeText(ctcInfoStr);
+        alert('Copied!');
+    };
 
     const requestView = <MDBRow>
         <MDBRow className='mt-4'>
@@ -23,15 +46,29 @@ export default function ServiceProviderView() {
             </MDBCol>
         </MDBRow>
         <MDBRow className='mt-4'>
-            <MDBBtn rounded >Send Request</MDBBtn>
+            <MDBBtn rounded onClick={onDeploy}>Send Request</MDBBtn>
         </MDBRow>
     </MDBRow>;
+    
+    const attachCode = 
+    <MDBRow className='mt-4'>
+            <MDBCol>
+                <pre >
+                    {ctcInfoStr}
+                </pre>
+            </MDBCol>
+            <MDBCol>
+                <MDBBtn rounded onClick={copyToClipborad}>Copy to clipboard</MDBBtn>
+            </MDBCol>
+            
+    </MDBRow>;
+    
   return (
     <div>
         <MDBContainer>
             <MDBRow >
                 <MDBCol className='shadow-5'>
-                    {requestView}
+                    {isAttached ? attachCode : requestView}
                 </MDBCol>
                 <MDBCol className='shadow-5'>
                     <div className='d-flex align-items-center justify-content-center mt-3'><h3 className='text-primary text-uppercase fw-bold'>Payed by Municipality</h3></div>
