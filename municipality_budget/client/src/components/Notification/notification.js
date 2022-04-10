@@ -20,7 +20,7 @@ export default function Notification(props) {
         </div>
         <div style={{height:"65vh", overflow:"scroll"}}>
             {req.map((reqItem) => {
-                return <RequestMsg  accountAttacher={props.account} key ={reqItem.id} request={reqItem}/>
+                return <RequestMsg  accountAttacher={props.account} key ={reqItem.id} request={reqItem} type={props.type}/>
             })}
             
         </div>
