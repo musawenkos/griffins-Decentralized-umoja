@@ -10,7 +10,7 @@ const port = "";
 const PORT = 5000;
 
 const token = {
-    'X-API-key': 'UcMg75wrnjavhV6zGanrn1cUUsuN3ZpN8qboO8Nv',
+    'X-API-key': '',
 }
 
 let indexerClient = new algosdk.Indexer(token, baseServer, port);
@@ -19,10 +19,10 @@ app.use(cors());
 app.use(express.json());
 const crypto = require('crypto');
 var config = {
-    user: 'MBC',
-    password: '123456',
-    server: 'DESKTOP-5DSBE27', 
-    database: 'Muni',
+    user: '',
+    password: '',
+    server: '', 
+    database: '',
     trustServerCertificate: true,
 };
 
