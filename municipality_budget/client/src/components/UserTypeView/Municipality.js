@@ -24,7 +24,7 @@ export default function Municipality(props) {
     setBalance(balance);
     props.handleShowView(false);
   };
-  const isLogin = props.isLogin ? <Login type ="Municipality" makeLoginFalse={props.handleIsLogin}  handleConnectWallet={connectWallet}  /> : <Register type ="Municipality" makeLoginFalse={props.handleIsLogin}/>;
+  const isLogin = props.isLogin ? <Login type ="Municipality" makeLoginFalse={props.handleIsLogin}  handleConnectWallet={connectWallet}  userType="LM"/> : <Register type ="Municipality" makeLoginFalse={props.handleIsLogin}/>;
   const municipalityView = <MunicipalityView account={acc} setNewBal={setBalance} getBalance={getBalance} />;
   return ( 
     <>

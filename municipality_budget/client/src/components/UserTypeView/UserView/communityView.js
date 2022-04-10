@@ -16,6 +16,8 @@ export default function CommunityView() {
     const [userTypeFilter, setUserTypeFilter] = useState('');
     const [showModal, getModal] = useState(false);
     const [listAccTrans,setAccTrans] = useState();
+    const [listAllAccTrans,setAllAccTrans] = useState();
+    
     
     
     const closeModal = () =>{
@@ -34,11 +36,32 @@ export default function CommunityView() {
       .then(response => response.json())
       .then((results) => setAccTrans(results));
       getModal(false);
+      
+    }
+
+    const getAllTransaction = async() => {
+        let listUsersArr = '';
+        const data = await UsersDataService.getAllUsers();
+        data.docs.map((doc) => listUsersArr += doc.get('wallet_address') + ",")
+        console.log(JSON.stringify(listUsersArr));
+        const url = "http://localhost:5000/allTransactions/" + listUsersArr;
+      fetch(url)
+      .then(response => response.json())
+      .then((results) => setAllAccTrans(results));
+      //getModal(false);
+      
     }
     
     const accTxComponent = listAccTrans !== undefined ? listAccTrans.map((accTx) => {
-        return <AccountTransaction  key={accTx.txId} tx={accTx}/>
+        return <AccountTransaction  key={accTx.txId} tx={accTx} />
     }) : '';
+    const accAllTxComponent = listAllAccTrans !== undefined ? listAllAccTrans.map((accTx) => {
+        return <AccountTransaction  key={accTx.txId} tx={accTx} />
+    }) : '';
+
+    useEffect(() => {
+        getAllTransaction();
+    },[]);
 
   return (
       
@@ -47,33 +70,16 @@ export default function CommunityView() {
             <MDBRow >
                 <MDBCol className='shadow-5'>
                     <div className='d-flex align-items-center justify-content-center mt-3'>
-                        <h4 className='text-primary text-uppercase fw-bold'>Treasury Transactions </h4>
-                        <MDBBtn id='treasury' onClick={setModalBox}><MDBIcon fas icon="filter" />Filter</MDBBtn>
+                        <h4 className='text-primary text-uppercase fw-bold'>All Transactions </h4>
+                        
                     </div>
                     <div style={{height:"65vh", overflow:"scroll"}}>
-                       {accTxComponent}
+                       {showModal ?  accTxComponent : accAllTxComponent}
                     </div>
                 </MDBCol>
-                <MDBCol className='shadow-5'>
-                    <div className='d-flex align-items-center justify-content-center mt-3'>
-                        <h4 className='text-primary text-uppercase fw-bold'>Local Municipality Transactions </h4>
-                        <MDBBtn id='municipality' onClick={setModalBox}><MDBIcon fas icon="filter" />Filter</MDBBtn>
-                    </div>
-                    <div style={{height:"65vh", overflow:"scroll"}}>
-                        
-                        
-                    </div>
-                </MDBCol>
-                <MDBCol className='shadow-5'>
-                    <div className='d-flex align-items-center justify-content-center mt-3'>
-                        <h4 className='text-primary text-uppercase fw-bold'>Service Provider Transactions </h4>
-                        <MDBBtn id='service provider' onClick={setModalBox}><MDBIcon fas icon="filter"/>Filter</MDBBtn>
-                    </div>
-                    <div style={{height:"65vh", overflow:"scroll"}}>
-                        
-                        
-                    </div>
-                </MDBCol>
+            </MDBRow>
+            <MDBRow>
+                <MDBBtn id='treasury' onClick={setModalBox}><MDBIcon fas icon="filter" />Filter</MDBBtn>
             </MDBRow>
         </MDBContainer>
         <FilterModal type={userTypeFilter} isModalShowned={showModal} closeModal={closeModal} getTransactionByAccount={getTransactionByAccount}/>

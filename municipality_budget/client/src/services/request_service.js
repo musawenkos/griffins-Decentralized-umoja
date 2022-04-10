@@ -22,6 +22,7 @@ class RequestDataService{
         const requestDoc = doc(db,"request", id);
         return getDoc(requestDoc);
     }
+    
 }
 
 export default new RequestDataService();

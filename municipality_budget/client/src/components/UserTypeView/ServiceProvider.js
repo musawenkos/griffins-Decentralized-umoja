@@ -25,7 +25,7 @@ export default function ServiceProvider(props) {
     props.handleShowView(false);
   };
 
-  const isLogin = props.isLogin ? <Login type ="Service Provider" handleConnectWallet={connectWallet} makeLoginFalse={props.handleIsLogin}/> : <Register type ="Service Provider" makeLoginFalse={props.handleIsLogin}/>;
+  const isLogin = props.isLogin ? <Login type ="Service Provider" handleConnectWallet={connectWallet} makeLoginFalse={props.handleIsLogin} userType="SP"/> : <Register type ="Service Provider" makeLoginFalse={props.handleIsLogin}/>;
   return (
     <>
       <Navbar account={acc} bal={balance} />

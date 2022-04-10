@@ -21,7 +21,7 @@ export default function TreasuryView(props) {
     const onAttached = async () => {
         console.log(ctcInfoStr);
         const ctc = props.account.contract(backend, JSON.parse(ctcInfoStr));
-        backend.National_Government(ctc, { isRequestedAmt});
+        backend.National_Government(ctc, { isRequestedAmt, });
         alert('You have accepted the user amount');
     };
   return (
