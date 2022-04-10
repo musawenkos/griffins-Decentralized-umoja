@@ -17,6 +17,7 @@ export default function MunicipalityView(props) {
     const [ctcInfoStr,setCTCInfor] = useState('');
     const [ctcInfoStrVal,setCTCInforVal] = useState('');
     const [isAttached,setAttachCode] = useState(false);
+    let typeRequester = "LM";
     const [isDeployer, isDeployerHandler] = useState(true);
     const [formValue, setFormValue] = useState({
         age : 0,
@@ -35,7 +36,8 @@ export default function MunicipalityView(props) {
         let requestDescr = formValue.requestedDecr;
         const meAddress = props.account.networkAccount;
         const ctc = props.account.contract(backend);
-        backend.Local_Municipality(ctc,{requestedAmt, requestDescr, meAddress});
+        
+        backend.Requester(ctc,{requestedAmt, requestDescr, meAddress,typeRequester});
         const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
         setCTCInfor(ctcInfoStr);
         setAttachCode(true);
@@ -67,7 +69,8 @@ export default function MunicipalityView(props) {
     const onAttached = async () => {
         console.log(ctcInfoStrVal);
         const ctc = props.account.contract(backend, JSON.parse(ctcInfoStrVal));
-        backend.National_Government(ctc, { isRequestedAmt});
+        let typeDonor = "LM";
+        backend.Donor(ctc,{isRequestedAmt, typeDonor})
         alert('You have accepted the user amount');
     };
 
@@ -164,7 +167,7 @@ export default function MunicipalityView(props) {
                         </div>
                     </MDBRow>
                 </MDBCol>
-                <Notification isAttachContract ={isDeployer} account={props.account}/>
+                <Notification isAttachContract ={isDeployer} account={props.account} type={typeRequester}/>
             </MDBRow>
         </MDBContainer>
     </div>

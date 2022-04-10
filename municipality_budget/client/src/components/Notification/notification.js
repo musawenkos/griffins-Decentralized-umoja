@@ -41,7 +41,8 @@ function RequestMsg(props) {
     const onAttached = async () => {
         console.log(requesterInfor);
         const ctc = props.accountAttacher.contract(backend, JSON.parse(requesterInfor));
-        backend.National_Government(ctc, { isRequestedAmt});
+        let typeDonor = props.type;
+        backend.Donor(ctc,{isRequestedAmt, typeDonor})
         alert('You have accepted the user amount');
         //const requestsRef = firestore.collection('requests').firestore.doc().update();
         const updateReq = {

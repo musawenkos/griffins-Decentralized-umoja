@@ -23,7 +23,8 @@ export default function ServiceProviderView(props) {
         let requestDescr = formValue.requestedDecr;
         const meAddress = props.account.networkAccount;
         const ctc = props.account.contract(backend);
-        backend.Local_Municipality(ctc,{requestedAmt, requestDescr, meAddress});
+        let typeRequester = "SP";
+        backend.Requester(ctc,{requestedAmt, requestDescr, meAddress,typeRequester});
         const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
         setCTCInfor(ctcInfoStr);
         setAttachCode(true);
