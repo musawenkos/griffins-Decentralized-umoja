@@ -26,10 +26,10 @@ export default function AccountTransaction(props) {
         </MDBRow>
         <MDBRow>
                 <MDBCol md='4'>
-                    <div className="text-truncate" style={{fontSize:"10px","maxWidth": "150px"}}><b>FROM:</b> {accntAddrSender === undefined ? "DOESN'T EXIST" : accntAddrSender[0]["user_type_function"]}</div>
+                    <div  style={{fontSize:"10px"}}><b>FROM:</b> {accntAddrSender === undefined ? "DOESN'T EXIST" : accntAddrSender[0]["user_type_function"]}</div>
                 </MDBCol>
                 <MDBCol md='4'>
-                    <div className="text-truncate" style={{fontSize:"10px","maxWidth": "150px"}}><b>TO:</b> {accntAddrReceiver === undefined ? "DOESN'T EXIST" : accntAddrReceiver[0]["user_type_function"]}</div>
+                    <div  style={{fontSize:"10px"}}><b>TO:</b> {accntAddrReceiver === undefined ? "DOESN'T EXIST" : accntAddrReceiver[0]["user_type_function"]}</div>
                 </MDBCol>
             </MDBRow>
     </MDBRow>

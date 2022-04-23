@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+
 import {
   MDBContainer,
   MDBNavbar,
@@ -9,7 +10,9 @@ import { deepOrange } from '@mui/material/colors';
 
 
 export default function Navbar(props) {
-  const userAccount = <div className='d-flex flex-row-reverse text-primary fs-5'>         
+  
+  const userAccount = <div className='d-flex flex-row-reverse text-primary fs-5'> 
+                             
                         <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
                         <div style={{marginTop:"5px",marginRight:"10px"}}>
                           Balance : {props.bal}

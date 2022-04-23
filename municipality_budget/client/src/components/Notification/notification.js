@@ -1,18 +1,21 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import { MDBCol, MDBBtn, MDBIcon, MDBRow} from 'mdb-react-ui-kit'
 import RequestDataService from '../../services/request_service';
+import UsersDataService from '../../services/users_service';
 import * as backend from "../../build/index.main.mjs";
+import { AppContext } from '../../state_management/AppContext';
 
 export default function Notification(props) {
     const [req, getRequests] = useState([]);
+    const appContext = useContext(AppContext);
     
     const getRequest = async () =>{
-        const data = await RequestDataService.getAllRequest();
+        const data = props.isRequester ? await RequestDataService.getAllRequestByEmail(appContext.state.email) : await RequestDataService.getAllRequestByType(appContext.state.email);
         getRequests(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
     }
     useEffect(() => {
         getRequest();
-    },[]);
+    },[props.isRequester]);
   return (
     <MDBCol className='shadow-5'>
         <div className='d-flex align-items-center justify-content-center mt-3'>
@@ -20,7 +23,7 @@ export default function Notification(props) {
         </div>
         <div style={{height:"65vh", overflow:"scroll"}}>
             {req.map((reqItem) => {
-                return <RequestMsg  accountAttacher={props.account} key ={reqItem.id} request={reqItem} type={props.type}/>
+                return <RequestMsg isReq={props.isRequester} accountAttacher={props.account} key ={req.id} request={reqItem} type={props.type}/>
             })}
             
         </div>
@@ -32,11 +35,23 @@ export default function Notification(props) {
 
 
 function RequestMsg(props) {
-    const { request_Description, request_amount,requesterInfor,requestInforStatus,id} = props.request;
+    const { request_Description, request_amount,requesterInfor,requestInforStatus,id, requestEmailTo, requesterUser} = props.request;
+    const [getUserTypeFun, setgetUserTypeFun] = useState('');
 
     const isRequestedAmt = (amt) => {
         console.log(amt);
     };
+
+    const getUser = async () =>{
+        /* console.log(props.request)
+        console.log(props.isReq)
+        console.log(requestEmailTo , requesterUser) */
+        const data = await UsersDataService.getUsersByEmail(props.isReq ? requestEmailTo : requesterUser);
+        setgetUserTypeFun(data.docs.map((doc) => doc.get("user_type_function"))[0]);
+    }
+    useEffect(() => {
+        getUser();
+    },[props.isReq ? requestEmailTo : requesterUser]);
 
     const onAttached = async () => {
         console.log(requesterInfor);
@@ -68,11 +83,27 @@ function RequestMsg(props) {
         </MDBBtn>
     </MDBCol>;
 
-  return (
-    <MDBRow className='shadow-4 m-2' style={{background:"#D3D3D3"}}>
-        <MDBCol>{request_Description} : {request_amount} </MDBCol>
-        {requestInforStatus === "USED" ?  reqStatusUsedBtn : reqStatusNotUsedBtn}
-        {props.key}
-    </MDBRow>
-  )
+    if(props.isReq){
+        //FROM DONOR TO REQUESTER
+        //FROM requestEmailTo TO requesterUser
+        return (
+            <MDBRow className='shadow-4 m-2' style={{background:"#D3D3D3"}}>
+                <MDBCol>{request_Description} : Price {request_amount}  {props.isReq ? 'TO' : 'FROM' } {getUserTypeFun !== undefined ? getUserTypeFun : 'wait...'}</MDBCol>
+                
+            </MDBRow>
+          )
+    }else{
+        //FROM REQUESTER TO DONOR
+        //FROM requesterUser TO requestEmailTo
+        return (
+            <MDBRow className='shadow-4 m-2' style={{background:"#D3D3D3"}}>
+                {console.log(getUserTypeFun)}
+                <MDBCol>{request_Description} : Price {request_amount}  {props.isReq ? 'TO' : 'FROM' } {getUserTypeFun !== undefined ? getUserTypeFun : 'wait...'}</MDBCol>
+                {requestInforStatus === "USED" ?  reqStatusUsedBtn : reqStatusNotUsedBtn}
+                {props.key}
+            </MDBRow>
+          )
+    }
+
+  
 }

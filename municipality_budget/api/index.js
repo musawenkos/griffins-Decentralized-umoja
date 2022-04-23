@@ -10,7 +10,7 @@ const port = "";
 const PORT = 5000;
 
 const token = {
-    'X-API-key': '',
+    'X-API-key': 'UcMg75wrnjavhV6zGanrn1cUUsuN3ZpN8qboO8Nv',
 }
 
 let indexerClient = new algosdk.Indexer(token, baseServer, port);
@@ -60,20 +60,26 @@ app.post("/register",async (req,res)=>{
 
 const getTransaction = async(walletAddr) =>{
     let transactionsArrBulk = [];
-    let accountAddressInfor = await indexerClient.lookupAccountTransactions(walletAddr).limit(25).txType("pay").do();
-    let transactionsArr = accountAddressInfor.transactions;
-    for (let index = 0; index < transactionsArr.length; index++) {
-        //console.log(transactionsArr[index]["inner-txns"]) //[]
-        if(accountAddressInfor.transactions[index]["inner-txns"] !== undefined){
-            let tranxBlock = {
-                "txId": accountAddressInfor.transactions[index].id,
-                "senderAccount": accountAddressInfor.transactions[index].sender,
-                "receiverInnerTrans": accountAddressInfor.transactions[index]["inner-txns"],
+    try {
+        let accountAddressInfor = await indexerClient.lookupAccountTransactions(walletAddr).limit(25).txType("pay").do();
+        let transactionsArr = accountAddressInfor.transactions;
+        for (let index = 0; index < transactionsArr.length; index++) {
+            //console.log(transactionsArr[index]["inner-txns"]) //[]
+            if(accountAddressInfor.transactions[index]["inner-txns"] !== undefined){
+                let tranxBlock = {
+                    "txId": accountAddressInfor.transactions[index].id,
+                    "senderAccount": accountAddressInfor.transactions[index].sender,
+                    "receiverInnerTrans": accountAddressInfor.transactions[index]["inner-txns"],
+                }
+                transactionsArrBulk.push(tranxBlock);
             }
-            transactionsArrBulk.push(tranxBlock);
         }
+        return transactionsArrBulk;
+    } catch (error) {
+        console.log(error.message)
+        return;
     }
-    return transactionsArrBulk;
+    
 }
 
 app.get("/transactions/:accountAddress",async (req,res)=>{

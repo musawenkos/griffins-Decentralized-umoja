@@ -25,7 +25,7 @@ export default function Treasury(props) {
     setBalance(balance);
     props.handleShowView(false);
   };
-  const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin} handleConnectWallet={connectWallet} userType="NG"/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
+  const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin} handleConnectWallet={connectWallet}/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
   const treasuryView = <TreasuryView account={acc}/>;
   return (
     <>

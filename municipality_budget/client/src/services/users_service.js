@@ -26,6 +26,10 @@ class UsersDataService{
         const usersDoc = query(usersCollectionRef,where("user_type", "==" , type));
         return getDocs(usersDoc);
     }
+    getUsersByEmail = (email) =>{
+        const usersDoc = query(usersCollectionRef,where("email", "==" , email));
+        return getDocs(usersDoc);
+    }
     getUserByWalletAddr = (walletAddr) => {
         const usersDoc = query(usersCollectionRef,where("wallet_address", "==" , walletAddr));
         return getDocs(usersDoc);

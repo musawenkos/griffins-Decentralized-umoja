@@ -1,24 +1,24 @@
-import React, {useState} from 'react'
+import React, {useState,useContext,useEffect} from 'react'
 import { MDBCol, MDBContainer, MDBRow, MDBInput, MDBBtn } from 'mdb-react-ui-kit'
 import * as backend from "../../../build/index.main.mjs";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import {loadStdlib} from '@reach-sh/stdlib';
 import Notification from '../../Notification/notification.js';
 import {serverTimestamp} from "firebase/firestore"
 import RequestDataService from "../../../services/request_service"
+import { AppContext } from '../../../state_management/AppContext.js';
+import UsersDataService from '../../../services/users_service.js';
 
 const reach = loadStdlib("ALGO");
 
 export default function MunicipalityView(props) {
+    const appContext = useContext(AppContext);
     const [ctcInfoStr,setCTCInfor] = useState('');
     const [ctcInfoStrVal,setCTCInforVal] = useState('');
     const [isAttached,setAttachCode] = useState(false);
     let typeRequester = "LM";
     const [isDeployer, isDeployerHandler] = useState(true);
+    const [ng, getNG] = useState({});
     const [formValue, setFormValue] = useState({
         age : 0,
         requestedAmt: 0,
@@ -40,7 +40,7 @@ export default function MunicipalityView(props) {
         backend.Requester(ctc,{requestedAmt, requestDescr, meAddress,typeRequester});
         const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
         setCTCInfor(ctcInfoStr);
-        setAttachCode(true);
+        setAttachCode(false);
         
         
 
@@ -50,7 +50,8 @@ export default function MunicipalityView(props) {
             request_Description: requestDescr,
             request_amount: formValue.requestedAmt,
             requesterInfor:ctcInfoStr,
-            requesterUser: "ndlelamusa1st@gmail.com",
+            requesterUser: appContext.state.email,
+            requestEmailTo: ng[0].emailTo
         };
 
         try {
@@ -76,10 +77,22 @@ export default function MunicipalityView(props) {
 
     const copyToClipborad = async () => {
         navigator.clipboard.writeText(ctcInfoStr);
+        setAttachCode(false);
         alert('Copied!');
     };
-    
+
+    const getRequest = async () =>{
+        const data = await UsersDataService.getUsersByType("Treasury");
+        getNG(data.docs.map((doc) => ({emailTo:doc.get("email"),userFuncTo:doc.get("user_type_function")})));
+    }
+    useEffect(() => {
+        getRequest();
+    },[]);
+    //ng[0].userFuncTo
     const deployView = <MDBRow>
+        <MDBRow className='mt-4'>
+            <MDBInput label='National Government' id='form1' type='text' disabled/>
+        </MDBRow>
         <MDBRow className='mt-4'>
             <MDBCol>
                 <MDBInput name='requestedDecr'  label='Requested Description' id='textAreaExample' rows={4}  value={formValue.requestedDecr}
@@ -139,35 +152,8 @@ export default function MunicipalityView(props) {
                         </MDBCol>
                     </MDBRow>
                     {isDeployer ?  isAttached ? attachCode : deployView : attachView}
-                    <MDBRow className='mt-4'>
-                        <MDBRow>
-                            <MDBInput label='Amount(ALGO):' id='formControlDefault' type='text' />
-                        </MDBRow>
-                        <MDBRow className='mt-2'>
-                            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel id="demo-simple-select-standard-label">Select List of Suppliers</InputLabel>
-                                <Select
-                                labelId="demo-simple-select-standard-label"
-                                id="demo-simple-select-standard"
-                                value={formValue.age}
-                                onChange={onChange}
-                                label="Select List of Suppliers"
-                                >
-                                <MenuItem value={10}>BME Group of Companies</MenuItem>
-                                <MenuItem value={20}>Arrow Chem Chemical Manufacturers</MenuItem>
-                                <MenuItem value={30}>The Cleaning Company Pty Ltd</MenuItem>
-                                </Select>
-                            </FormControl>
-                           
-                        </MDBRow>
-                    </MDBRow>
-                    <MDBRow className='m-2'>
-                        <div className='d-flex flex-row-reverse'>
-                            <MDBBtn rounded>Send</MDBBtn>
-                        </div>
-                    </MDBRow>
                 </MDBCol>
-                <Notification isAttachContract ={isDeployer} account={props.account} type={typeRequester}/>
+                <Notification isRequester ={isDeployer} account={props.account} type="LM"/>
             </MDBRow>
         </MDBContainer>
     </div>
