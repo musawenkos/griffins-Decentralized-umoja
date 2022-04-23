@@ -1,1 +1,19 @@
 Line 13, 27, 29 and 30: Are we transferring the whole amount? If not how do we transfer some of it
+
+Extensibility
+    - Automate the process of assigning algos to our participants
+    - All transactions needs description
+
+Fixes : -
+Treasury page - Change Accepted to Accepted
+Implement session coocies
+Sytem should automatically update the UI after transaction
+Reject not yet Implemented
+After the request has been approved, it does not specify on requesters' side
+
+Other fixes : - 
+Treasury's transactions don't display
+
+Screen Record : -
+BandiCam
+Screencast-O-Matic
