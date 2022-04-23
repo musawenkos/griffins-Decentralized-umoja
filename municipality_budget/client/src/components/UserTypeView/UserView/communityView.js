@@ -17,6 +17,7 @@ export default function CommunityView() {
     const [showModal, getModal] = useState(false);
     const [listAccTrans,setAccTrans] = useState();
     const [listAllAccTrans,setAllAccTrans] = useState();
+    const [isAllTranx,setAllTranx] = useState(false);
     
     
     
@@ -34,7 +35,7 @@ export default function CommunityView() {
         const url = "http://localhost:5000/transactions/" + selAccount;
       fetch(url)
       .then(response => response.json())
-      .then((results) => setAccTrans(results));
+      .then((results) => setAllAccTrans(results));
       getModal(false);
       
     }
@@ -91,19 +92,26 @@ export default function CommunityView() {
 function FilterModal(props) {
     const [listUsers,getUsers] = useState([]); //set users coming from database
     const [selectedAccount, onSelAccount] = useState('');
+    const [selectedType, setselectedType] = useState('');
     
-    const getUsersByType = async () => {
-        if(props.type !== ''){
-            if(props.type === 'treasury'){
+    const getUsersByType = async (type) => {
+        if(type !== ''){
+            if(type === 'treasury'){
                 const data = await UsersDataService.getUsersByType("Treasury");
                 getUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
-            }else if(props.type === 'municipality'){
+            }else if(type === 'municipality'){
                 const data = await UsersDataService.getUsersByType("Municipality");
                 getUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
-            }else if(props.type === 'service provider'){
-
+            }else if(type === 'service provider'){
+                const data = await UsersDataService.getUsersByType("Service Provider");
+                getUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
             }
         }
+    }
+
+    const onSelectTypeChange = async(e) =>{
+        setselectedType(e.target.value)
+        getUsersByType(e.target.value);
     }
 
     const onChange = (e) => {
@@ -111,37 +119,53 @@ function FilterModal(props) {
       };
     
 
-    useEffect(() => {
-        getUsersByType();
-    },[props.type]);
-
   return (
     <div>
         <MDBModal show={props.isModalShowned}  tabIndex='-1'>
             <MDBModalDialog>
             <MDBModalContent>
                 <MDBModalHeader>
-                <MDBModalTitle className='text-primary text-uppercase fw-bold'>{props.type} Transactions Filter </MDBModalTitle>
+                <MDBModalTitle className='text-primary text-uppercase fw-bold'>Transactions Filter </MDBModalTitle>
                 <MDBBtn className='btn-close' color='none' onClick={props.closeModal}></MDBBtn>
                 </MDBModalHeader>
                 <MDBModalBody>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Select List of {props.type} users</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            label="Select List of Suppliers"
-                            value={selectedAccount}
-                            onChange={onChange}
-                        >
-                            <MenuItem value=""></MenuItem>
-                            {
-                                listUsers.map((user) => {
-                                    return <MenuItem key={user.email} value={user.wallet_address}>{user.user_type_function}</MenuItem>
-                                })
-                            }
-                        </Select>
-                    </FormControl>
+                    <MDBRow>
+                        <FormControl variant="standard" sx={{ p: 3, minWidth: 120 }} >
+                            <InputLabel id="demo-simple-select-standard-label">Select User Type</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-standard-label"
+                                id="demo-simple-select-standard"
+                                label="Select List of Suppliers"
+                                value={selectedType}
+                                onChange={onSelectTypeChange}
+                            >
+                                <MenuItem value=""></MenuItem>
+                                <MenuItem value="treasury">Treasury</MenuItem>
+                                <MenuItem value="municipality">Municipality</MenuItem>
+                                <MenuItem value="service provider">Service Provider</MenuItem>
+                                
+                            </Select>
+                        </FormControl>
+                    </MDBRow>
+                    <MDBRow>
+                        <FormControl variant="standard" sx={{ p: 3, minWidth: 120 }}>
+                            <InputLabel id="demo-simple-select-standard-label">Select List of {selectedType} users</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-standard-label"
+                                id="demo-simple-select-standard"
+                                label="Select List of Suppliers"
+                                value={selectedAccount}
+                                onChange={onChange}
+                            >
+                                <MenuItem value=""></MenuItem>
+                                {
+                                    listUsers.map((user) => {
+                                        return <MenuItem key={user.email} value={user.wallet_address}>{user.user_type_function}</MenuItem>
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </MDBRow>
                 </MDBModalBody>
                 <MDBModalFooter>
                 <MDBBtn color='secondary' onClick={props.closeModal}>
