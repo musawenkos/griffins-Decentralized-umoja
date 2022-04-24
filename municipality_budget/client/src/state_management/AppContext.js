@@ -7,6 +7,7 @@ export const AppContextProvider = ({children}) =>{
         email: '',
         walletAddress: '',
         isLogin:false,
+        updateReq:false,
     });
     return (
         <AppContext.Provider value={{state, setAppState}}>

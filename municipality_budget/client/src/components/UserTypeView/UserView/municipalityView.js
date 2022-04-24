@@ -56,7 +56,7 @@ export default function MunicipalityView(props) {
 
         try {
             await RequestDataService.addRequest(newRequestInfor);
-
+            appContext.setAppState({...appContext.state,updateReq:!appContext.state.updateReq})
         } catch (error) {
             console.error(error.message)
         }
@@ -87,7 +87,7 @@ export default function MunicipalityView(props) {
     }
     useEffect(() => {
         getRequest();
-    },[]);
+    },[appContext.state.updateReq]);
     //ng[0].userFuncTo
     const deployView = <MDBRow>
         <MDBRow className='mt-4'>

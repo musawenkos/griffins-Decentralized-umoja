@@ -49,7 +49,7 @@ export default function ServiceProviderView(props) {
 
             try {
                 await RequestDataService.addRequest(newRequestInfor);
-
+                appContext.setAppState({...appContext.state,updateReq:!appContext.state.updateReq})
             } catch (error) {
                 console.error(error.message)
             }

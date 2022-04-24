@@ -11,11 +11,12 @@ export default function Notification(props) {
     
     const getRequest = async () =>{
         const data = props.isRequester ? await RequestDataService.getAllRequestByEmail(appContext.state.email) : await RequestDataService.getAllRequestByType(appContext.state.email);
+        
         getRequests(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
     }
     useEffect(() => {
         getRequest();
-    },[props.isRequester]);
+    },[props.isRequester,appContext.state.updateReq]);
   return (
     <MDBCol className='shadow-5'>
         <div className='d-flex align-items-center justify-content-center mt-3'>
@@ -35,6 +36,7 @@ export default function Notification(props) {
 
 
 function RequestMsg(props) {
+    const appContext = useContext(AppContext);
     const { request_Description, request_amount,requesterInfor,requestInforStatus,id, requestEmailTo, requesterUser} = props.request;
     const [getUserTypeFun, setgetUserTypeFun] = useState('');
     const [updated,setUpdated] = useState(false);
@@ -52,7 +54,7 @@ function RequestMsg(props) {
     }
     useEffect(() => {
         getUser();
-    },[props.isReq ? requestEmailTo : requesterUser,updated]);
+    },[props.isReq ? requestEmailTo : requesterUser]);
 
     const onAttached = async () => {
         console.log(requesterInfor);
@@ -66,8 +68,8 @@ function RequestMsg(props) {
         }
         try {
             const data = await RequestDataService.upateRequest(id,updateReq);
-            setUpdated(!updated)
-            console.log(data)
+            appContext.setAppState({...appContext.state,updateReq:!appContext.state.updateReq})
+            //console.log(data)
         } catch (error) {
             console.log(error.message)
         }
@@ -80,7 +82,7 @@ function RequestMsg(props) {
         }
         try {
             const data = await RequestDataService.upateRequest(id,updateReq);
-            setUpdated(!updated)
+            appContext.setAppState({...appContext.state,updateReq:!appContext.state.updateReq})
             console.log(data)
         } catch (error) {
             console.log(error.message)
