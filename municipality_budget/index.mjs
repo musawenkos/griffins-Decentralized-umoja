@@ -12,7 +12,6 @@ const beforeNatGov = await getBalance(accNatGov);
 const beforeLocalMun1 = await getBalance(accLocalMun1);
 
 
-
 //This works fine
 //Do the participant who deploys the contract is the first person to interact at the contract / backend 
 const ctcLocalMun1 = accLocalMun1.contract(backend);

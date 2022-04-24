@@ -26,7 +26,7 @@ const Requester = Participant('Requester', {
 
   Donor.only(() => {
       //I think this is where we accept or reject the requested amount or funds
-      //Lets say that the National government accept the amount by giving you money that is above or below
+      //Lets say that the National government accept the amount by giving you money that is above or below 
       interact.isRequestedAmt(requestAmt);
       const typeDonor = declassify(interact.typeDonor);
       assume(interact.typeDonor == "LM" || interact.typeDonor == "NG");
