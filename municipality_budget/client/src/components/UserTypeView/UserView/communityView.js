@@ -17,7 +17,7 @@ export default function CommunityView() {
     const [showModal, getModal] = useState(false);
     const [listAccTrans,setAccTrans] = useState();
     const [listAllAccTrans,setAllAccTrans] = useState();
-    const [isAllTranx,setAllTranx] = useState(false);
+    //const [isAllTranx,setAllTranx] = useState(false);
     
     
     

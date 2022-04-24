@@ -16,14 +16,7 @@ export default function AccountTransaction(props) {
         getAllRequest(dataRequestInfor.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
     }
 
-    let arrFilter = allReq === undefined ? "LOAD..." : allReq.map((req) =>{
-        console.log(req.requestEmailTo, accntAddrReceiver[0]["email"])
-        /* if(req.requestEmailTo === accntAddrReceiver[0]["email"] && req.requesterUser === accntAddrSender[0]["email"]){
-            return "Hello";
-        }else{
-            return "no";
-        } */
-    });
+    
     useEffect(() => {
         getUserByWalletAddr();
         return () => {
@@ -35,10 +28,7 @@ export default function AccountTransaction(props) {
   return (
     <MDBRow className='shadow-5 mt-2'>
         <MDBRow>
-            {
-               
-                console.log(arrFilter)
-            }
+            
         </MDBRow>
         <MDBRow>
             <MDBCol md='8' >

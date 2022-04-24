@@ -37,6 +37,7 @@ export default function Notification(props) {
 function RequestMsg(props) {
     const { request_Description, request_amount,requesterInfor,requestInforStatus,id, requestEmailTo, requesterUser} = props.request;
     const [getUserTypeFun, setgetUserTypeFun] = useState('');
+    const [updated,setUpdated] = useState(false);
 
     const isRequestedAmt = (amt) => {
         console.log(amt);
@@ -51,7 +52,7 @@ function RequestMsg(props) {
     }
     useEffect(() => {
         getUser();
-    },[props.isReq ? requestEmailTo : requesterUser]);
+    },[props.isReq ? requestEmailTo : requesterUser,updated]);
 
     const onAttached = async () => {
         console.log(requesterInfor);
@@ -65,6 +66,21 @@ function RequestMsg(props) {
         }
         try {
             const data = await RequestDataService.upateRequest(id,updateReq);
+            setUpdated(!updated)
+            console.log(data)
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
+    const onReject = async () => {
+        const updateReq = {
+            requestInforStatus: "REJECTED",
+            requesterInfor:''
+        }
+        try {
+            const data = await RequestDataService.upateRequest(id,updateReq);
+            setUpdated(!updated)
             console.log(data)
         } catch (error) {
             console.log(error.message)
@@ -72,8 +88,8 @@ function RequestMsg(props) {
     };
     const reqStatusNotUsedBtn = 
     <MDBCol className='d-flex align-items-center justify-content-center'>
-        <MDBBtn rounded size='sm' style={{marginRight:"5px"}} onClick={onAttached}>Accepted</MDBBtn>
-        <MDBBtn rounded size='sm'>Reject</MDBBtn>
+        <MDBBtn rounded size='sm' style={{marginRight:"5px"}} onClick={onAttached}>Accept</MDBBtn>
+        <MDBBtn rounded size='sm' onClick={onReject}>Reject</MDBBtn>
     </MDBCol>;
 
     const reqStatusUsedBtn = 
@@ -83,13 +99,20 @@ function RequestMsg(props) {
         </MDBBtn>
     </MDBCol>;
 
+    const reqStatusRejectBtn = 
+    <MDBCol className='d-flex align-items-center justify-content-center'>
+        <MDBBtn color='danger' tag='a' floating>
+            <MDBIcon far icon="times-circle" />
+        </MDBBtn>
+    </MDBCol>;
+
     if(props.isReq){
         //FROM DONOR TO REQUESTER
         //FROM requestEmailTo TO requesterUser
         return (
             <MDBRow className='shadow-4 m-2' style={{background:"#D3D3D3"}}>
                 <MDBCol>{request_Description} : Price {request_amount}  {props.isReq ? 'TO' : 'FROM' } {getUserTypeFun !== undefined ? getUserTypeFun : 'wait...'}</MDBCol>
-                
+                {requestInforStatus === "USED" ?  reqStatusUsedBtn : requestInforStatus === "REJECTED" ? reqStatusRejectBtn : 'WAIT'}
             </MDBRow>
           )
     }else{
@@ -99,7 +122,7 @@ function RequestMsg(props) {
             <MDBRow className='shadow-4 m-2' style={{background:"#D3D3D3"}}>
                 {console.log(getUserTypeFun)}
                 <MDBCol>{request_Description} : Price {request_amount}  {props.isReq ? 'TO' : 'FROM' } {getUserTypeFun !== undefined ? getUserTypeFun : 'wait...'}</MDBCol>
-                {requestInforStatus === "USED" ?  reqStatusUsedBtn : reqStatusNotUsedBtn}
+                {requestInforStatus === "USED" ?  reqStatusUsedBtn : requestInforStatus === "REJECTED" ? reqStatusRejectBtn : reqStatusNotUsedBtn}
                 {props.key}
             </MDBRow>
           )

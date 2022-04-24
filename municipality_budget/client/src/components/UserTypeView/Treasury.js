@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState,useContext} from 'react'
 import Login from '../Auth/login';
 import Register from '../Auth/register';
 import Navbar from '../UIComponents/navUI';
 import TreasuryView from './UserView/treasuryView';
 import {loadStdlib, MyAlgoConnect} from '@reach-sh/stdlib';
+import { AppContext } from '../../state_management/AppContext';
 
 const reach = loadStdlib("ALGO");
 
@@ -12,6 +13,7 @@ reach.setWalletFallback(reach.walletFallback({
   providerEnv: 'TestNet', MyAlgoConnect }));
 
 export default function Treasury(props) {
+  const appContext = useContext(AppContext)
   const [acc, setAccount] = useState(undefined);
   const [balance,setBalance] = useState(0);
   
@@ -23,6 +25,7 @@ export default function Treasury(props) {
     setAccount(account);
     let balance = await getBalance(account);
     setBalance(balance);
+    appContext.setAppState({...appContext.state,isLogin:true});
     props.handleShowView(false);
   };
   const isLogin = props.isLogin ? <Login type ="Treasury" makeLoginFalse={props.handleIsLogin} handleConnectWallet={connectWallet}/> : <Register type ="Treasury" makeLoginFalse={props.handleIsLogin}/>;
