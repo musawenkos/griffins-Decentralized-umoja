@@ -37,7 +37,6 @@ export default function Register(props) {
       let accP = reach.createAccount();
       accP.then(acc => {
         setNewAccProf({acc: reach.formatAddress(acc),mnemonic:reach.unsafeGetMnemonic(acc)})
-        reach.fundFromFaucet(reach.formatAddress(acc), reach.bigNumberify(5)).then(funds => console.log(funds));
         isRegisteredHandle(!isRegistered);
         const newUser = {
           email: formValue.email,
