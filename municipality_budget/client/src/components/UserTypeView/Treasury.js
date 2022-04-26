@@ -10,7 +10,7 @@ const reach = loadStdlib("ALGO");
 
 
 reach.setWalletFallback(reach.walletFallback({
-  providerEnv: 'TestNet', MyAlgoConnect }));
+  providerEnv: 'MainNet', MyAlgoConnect }));
 
 export default function Treasury(props) {
   const appContext = useContext(AppContext)
