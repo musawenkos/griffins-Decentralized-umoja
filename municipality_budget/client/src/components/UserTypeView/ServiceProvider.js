@@ -9,7 +9,7 @@ import { AppContext } from '../../state_management/AppContext';
 const reach = loadStdlib("ALGO");
 
 reach.setWalletFallback(reach.walletFallback({
-  providerEnv: 'TestNet', MyAlgoConnect }));
+  providerEnv: 'MainNet', MyAlgoConnect }));
 
 export default function ServiceProvider(props) {
   const appContext = useContext(AppContext)
